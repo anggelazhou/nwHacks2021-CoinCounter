@@ -3,7 +3,8 @@ package denominator.models;
 public class Coin {
 
     private String name;
-    private int val;
+    private int val;    // in cents
+    double diameter;    // in mm
 
     public Coin(String name, int val) {
         this.name = name;
@@ -18,4 +19,7 @@ public class Coin {
         return name;
     }
 
+    public double getDiameter() {
+        return diameter;
+    }
 }
