@@ -15,6 +15,13 @@ public class CoinRadiusMatrix {
     private static final double TOONIE_RADIUS = 28;
     private static final double ERROR = 0.0075;
 
+    private static String smallest;
+
+    public CoinRadiusMatrix(String smallest) {
+        this.smallest = smallest;
+    }
+
+
     // group ratios using smallest radius as reference (hashmap is <ratio, count>)
     public static HashMap<Double,Integer> countRatio(List<Integer> radiusList) throws RatioNotFoundException {
         int min = findMin(radiusList);
@@ -23,6 +30,7 @@ public class CoinRadiusMatrix {
         for (Integer radius : radiusList) {
             double ratio = radius/min;
 
+            // TODO: Section off the checks based on what the samllest coin value is
             if (Math.abs(ratio - 1) < ERROR) {
                 putter(rsf, 1.0);
             } else if (Math.abs(ratio - 1.176) < ERROR) {
@@ -49,7 +57,6 @@ public class CoinRadiusMatrix {
                 throw new RatioNotFoundException();
             }
         }
-
         return rsf;
     }
 
