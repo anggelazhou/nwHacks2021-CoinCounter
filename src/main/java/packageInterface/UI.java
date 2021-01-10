@@ -62,7 +62,7 @@ public class UI extends Application {
                 System.out.println();
                 uploadLabel.setText(imgLoc);
                 coinImg = new Image(imgLoc);
-                //Mat src = Imgcodecs.imread(imgLoc);
+                Mat src = Imgcodecs.imread(imgLoc);
             }
         });
 
