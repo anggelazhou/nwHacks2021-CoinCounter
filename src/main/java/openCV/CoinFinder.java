@@ -17,49 +17,30 @@ import static org.opencv.imgproc.Imgproc.CV_HOUGH_GRADIENT;
 
 public class CoinFinder {
 
-    public static void main(String[] args) throws InterruptedException { //TODO: for debugging
+    private static boolean renderSteps = true;
 
-        OpenCV.loadShared();
-
-        String file = "src/main/resources/image1.jpg";
-        Mat src = Imgcodecs.imread(file, CV_LOAD_IMAGE_COLOR);
-
-        System.out.println(findCoins(src).toString());
-
-
-    }
-
-    public static ArrayList<Integer> findCoins(Mat mat) throws InterruptedException {
+    public static ArrayList<Integer> findCoins(Mat mat) {
         ArrayList<Integer> list = new ArrayList<Integer>();
-
-        //TODO: collapse code... only temporarily chunky for optimization
-
+        int threshold = 10;
         Mat blur = new Mat();
         Mat edge = new Mat();
         Mat blur2 = new Mat();
-
-        Imgproc.cvtColor(mat, mat, COLOR_RGB2GRAY);
-        Imgcodecs.imwrite("gray.jpg", mat);
-
-        Imgproc.blur(mat, blur, new Size(5,5));
-        Imgcodecs.imwrite("blur.jpg", blur);
-
-        int threshold = 10;
-
-        Imgproc.Canny(blur, edge,threshold, threshold*3, 3, true);
-        Imgcodecs.imwrite("edge.jpg", edge);
-
-        Imgproc.GaussianBlur(edge, blur2, new Size(9, 9), 2, 2);
-        Imgcodecs.imwrite("blur2.jpg", blur2);
-
-
         Mat circles = new Mat();
 
+        Imgproc.cvtColor(mat, mat, COLOR_RGB2GRAY);
+        if(renderSteps) Imgcodecs.imwrite("gray.jpg", mat);
+
+        Imgproc.blur(mat, blur, new Size(5,5));
+        if(renderSteps) Imgcodecs.imwrite("blur.jpg", blur);
+
+        Imgproc.Canny(blur, edge,threshold, threshold*3, 3, true);
+        if(renderSteps) Imgcodecs.imwrite("edge.jpg", edge);
+
+        Imgproc.GaussianBlur(edge, blur2, new Size(9, 9), 2, 2);
+        if(renderSteps) Imgcodecs.imwrite("blur2.jpg", blur2);
 
         //TODO: make minRadius more robust using , not a hardcoded value
         Imgproc.HoughCircles(blur2, circles, CV_HOUGH_GRADIENT, 1, blur2.rows() / 8,20, 100, 0, blur2.rows() / 10);
-
-        System.out.println(blur2.rows());
 
         for (int x = 0; x < circles.cols(); x++) {
             double[] c = circles.get(0, x);
@@ -69,12 +50,26 @@ public class CoinFinder {
             // circle outline
             int radius = (int) Math.round(c[2]);
             Imgproc.circle(blur2, center, radius, new Scalar(255,0,255), 3, 8, 0 );
+
+            list.add(radius);
         }
 
+        if(renderSteps) Imgcodecs.imwrite("blur2.jpg", blur2);
 
-        Imgcodecs.imwrite("blur2.jpg", blur2);
 
         return list;
+    }
+
+    public static void main(String[] args) throws InterruptedException { //TODO: for debugging
+
+        OpenCV.loadShared();
+
+        String file = "src/main/resources/image2.jpg";
+        Mat src = Imgcodecs.imread(file, CV_LOAD_IMAGE_COLOR);
+
+        System.out.println(findCoins(src).toString());
+
+
     }
 
 }
