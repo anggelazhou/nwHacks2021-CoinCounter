@@ -65,11 +65,31 @@ public class Classifier {
     }
 
 
+    public int counter(HashMap<String, Integer> coinCount) {
+
+         int rsf = 0;
+
+        for (Map.Entry<String, Integer> entry : coinCount.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+
+            if (key.equals("Toonie")) {
+                rsf += (200 * value);
+            } else if (key.equals("Loonie")) {
+                rsf += (100 * value);
+            } else if (key.equals("Quarter")) {
+                rsf += (25 * value);
+            } else if (key.equals("Nickel")) {
+                rsf += (5 * value);
+            } else {
+                rsf += (10 * value);
+            }
+        }
 
 
 
-    public int counter(HashMap<Coin, Integer> coinCount) {
-        return 0;
+
+        return rsf;
     }
 
 

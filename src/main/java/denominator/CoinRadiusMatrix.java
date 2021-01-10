@@ -13,7 +13,7 @@ public class CoinRadiusMatrix {
     private static final double QUARTER_RADIUS = 23.88;
     private static final double LOONIE_RADIUS = 26.5;
     private static final double TOONIE_RADIUS = 28;
-    private static final double ERROR = 0.0075;
+    private static final double ERROR = 0.05;
 
     private static String smallest;
 
@@ -23,13 +23,13 @@ public class CoinRadiusMatrix {
 
 
     // group ratios using smallest radius as reference (hashmap is <ratio, count>)
-    public static HashMap<Double,Integer> countRatio(List<Integer> radiusList) throws RatioNotFoundException {
-        int min = findMin(radiusList);
+    public HashMap<Double,Integer> countRatio(List<Integer> radiusList) throws RatioNotFoundException {
+        double min = findMin(radiusList);
         HashMap<Double, Integer> rsf = new HashMap<Double, Integer>();
 
         for (Integer radius : radiusList) {
-            double ratio = radius/min;
-
+            double ratio = radius / min;
+            System.out.println(min + ", " + radius + ". " + radius/min);
             // TODO: Section off the checks based on what the samllest coin value is
             if (Math.abs(ratio - 1) < ERROR) {
                 putter(rsf, 1.0);
@@ -71,7 +71,7 @@ public class CoinRadiusMatrix {
     }
 
     // gets min radius from list of radius
-    private static int findMin(List<Integer> radiusList) {
+    private static double findMin(List<Integer> radiusList) {
         int minimumRadius = Integer.MAX_VALUE;
 
         for (Integer radius : radiusList) {
@@ -80,6 +80,6 @@ public class CoinRadiusMatrix {
             }
         }
 
-        return minimumRadius;
+        return (double) minimumRadius;
     }
 }
