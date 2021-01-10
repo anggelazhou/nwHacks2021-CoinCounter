@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import java.io.File;
+
+import openCV.CoinFinder;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import javafx.scene.control.Label;
@@ -22,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import nu.pattern.OpenCV;
 
 
 
@@ -33,6 +36,7 @@ public class UI extends Application {
     private static VBox result = new VBox();
     private static String imgLoc;
     private TableView resultTable = new TableView();
+    private static Mat src;
 
     public void start(Stage stage) throws Exception{
 
@@ -65,11 +69,11 @@ public class UI extends Application {
             File selectedFile = imgUploader.showOpenDialog(null);
 
             if(selectedFile != null){
-                nu.pattern.OpenCV.loadShared();
+                OpenCV.loadShared();
                 imgLoc = selectedFile.toURI().toString();
                 System.out.println("img uploaded");
                 coinImg = new Image(imgLoc);
-                Mat src = Imgcodecs.imread(imgLoc);
+                src = Imgcodecs.imread(imgLoc);
             }
         });
         Button runButton = new Button("Coin Count");
@@ -77,6 +81,10 @@ public class UI extends Application {
             if(smallestCoinChoices.getValue() != null && imgLoc != null){
                 System.out.println("Success");
                 //TODO: Implement other classes
+
+                ArrayList<Integer> coinResults = CoinFinder.findCoins(src);
+
+                System.out.println(coinResults.toString());
             }
             else if(imgLoc == null){
                 final Stage popUp = new Stage();
