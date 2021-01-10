@@ -25,12 +25,16 @@ public class CoinFinder {
         Mat blur = new Mat();
         Mat edge = new Mat();
         Mat blur2 = new Mat();
+        Mat proc = new Mat();
         Mat circles = new Mat();
 
         Imgproc.cvtColor(mat, mat, COLOR_RGB2GRAY);
         if(renderSteps) Imgcodecs.imwrite("gray.jpg", mat);
 
-        Imgproc.blur(mat, blur, new Size(5,5));
+//        Imgproc.blur(mat, blur, new Size(9,9));
+//        if(renderSteps) Imgcodecs.imwrite("blur.jpg", blur);
+        Imgproc.GaussianBlur(mat, blur, new Size(13, 13), 0, 0);
+        Imgproc.GaussianBlur(blur, blur, new Size(9, 9), 0, 0);
         if(renderSteps) Imgcodecs.imwrite("blur.jpg", blur);
 
         Imgproc.Canny(blur, edge,threshold, threshold*3, 3, true);
@@ -39,23 +43,24 @@ public class CoinFinder {
         Imgproc.GaussianBlur(edge, blur2, new Size(9, 9), 2, 2);
         if(renderSteps) Imgcodecs.imwrite("blur2.jpg", blur2);
 
+        proc = blur2;
+
         //TODO: make minRadius more robust using , not a hardcoded value
-        Imgproc.HoughCircles(blur2, circles, CV_HOUGH_GRADIENT, 1, blur2.rows() / 8,20, 100, 0, blur2.rows() / 10);
+        Imgproc.HoughCircles(proc, circles, CV_HOUGH_GRADIENT, 1, proc.rows() / 8,100, 100, 0, proc.rows() / 10);
 
         for (int x = 0; x < circles.cols(); x++) {
             double[] c = circles.get(0, x);
             Point center = new Point(Math.round(c[0]), Math.round(c[1]));
             // circle center
-            Imgproc.circle(blur2, center, 1, new Scalar(0,100,100), 3, 8, 0 );
+            Imgproc.circle(proc, center, 1, new Scalar(0,100,100), 3, 8, 0 );
             // circle outline
             int radius = (int) Math.round(c[2]);
-            Imgproc.circle(blur2, center, radius, new Scalar(255,0,255), 3, 8, 0 );
+            Imgproc.circle(proc, center, radius, new Scalar(255,0,255), 3, 8, 0 );
 
             list.add(radius);
         }
 
-        if(renderSteps) Imgcodecs.imwrite("blur2.jpg", blur2);
-
+        if(renderSteps) Imgcodecs.imwrite("proc.jpg", proc);
 
         return list;
     }
@@ -64,7 +69,7 @@ public class CoinFinder {
 
         OpenCV.loadShared();
 
-        String file = "src/main/resources/image2.jpg";
+        String file = "src/main/resources/image1.jpg";
         Mat src = Imgcodecs.imread(file, CV_LOAD_IMAGE_COLOR);
 
         System.out.println(findCoins(src).toString());
