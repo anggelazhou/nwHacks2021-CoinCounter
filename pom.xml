@@ -9,11 +9,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/nu.pattern/opencv -->
+        <!-- https://mvnrepository.com/artifact/org.openpnp/opencv -->
         <dependency>
-            <groupId>nu.pattern</groupId>
+            <groupId>org.openpnp</groupId>
             <artifactId>opencv</artifactId>
-            <version>2.4.9-4</version>
+            <version>3.4.2-0</version>
         </dependency>
 
     </dependencies>
